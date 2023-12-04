@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>News Website</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="app.css">
+       <style>
+        *{
+            margin : 0%;
+            padding: 0%;
+        }
+        body {
+            font-family: 'Roboto',sans-serif;
+            background: rgb(235, 187, 187);
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            background-color:rgb(241, 215, 98);
+            color:rgb(8, 8, 8);
+            padding: 39px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-left: 5px;
+        }
+        .logo li {
+            list-style: none;
+            margin-inline: 25px;
+            font-size: 19px;
+        }
+        .logo li:hover {
+            color: rgb(0, 183, 255);
+            border-bottom: 2px solid black;
+            cursor: pointer;
+        }
+        .searchBar {
+            display:flex;
+        }
+        .searchBar input {
+            width: 230px;
+            padding:  7px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            margin-inline: 5px;
+
+        }
+        .searchBar button {
+            width: 60px;
+            height: 35px;
+            background-color: rgb(255, 145, 0);
+            color: rgb(8, 8, 8);
+            border-radius: 8px;
+            border: none;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        .cardData {
+            display:grid;
+            
+            width: 80%;
+            grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+            margin: auto;
+            margin-top: 25px;
+        }
+        .card {
+            width: 300px;
+            background-color: #fff;
+            padding: 11px;
+            margin-top: 25px;
+            cursor: pointer;
+        }
+        .card img {
+            width: 100%;
+            height: 45%;
+        }
+        .card h3 {
+            margin-top: 10px;
+            padding: 3px;
+        }
+        .card p  {
+            margin-top: 10px;
+            padding: 2px;
+        }
+        #type {
+            position:absolute;
+            color:black;
+            margin-top: 80px;
+            margin-left:790px;
+        }
+        @media only screen and (max-width:830px) {
+            li {
+                display: none;
+            }
+        }
+        @media only screen and (max-width:470px) {
+            nav {
+                display: flex;
+                flex-direction: column;
+                text-align: center;
+                justify-content: center;
+            }
+            .logo {
+                justify-content: center;
+            }
+            .searchBar {
+                display: flex;
+                justify-content: center;
+                margin-top: 8px;
+            }
+            .cardData {
+                display: grid;
+                justify-content: center;
+                width: 80%;
+                grid-template-columns: repeat(auto-fit ,minmax(300px , 1fr));
+                margin: auto;
+            }
+            .card {
+                width: 300px;
+                background-color: #fff;
+                padding: 16px;
+            }
+            .card img {
+                width: 100%;
+                height: 45%;
+            }
+            .card h3 {
+                margin-top: 10px;
+                padding: 3px;
+            }
+            
+        }
+       </style>
+        <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family+Catamaran:wght@2008">
+    </head>
+    <body>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                <h1>IBC News</h1>
+                
+                </div>
+                <div class="category">
+                    <h1 id="type"></h1>
+                </div>
+                
+                <div class="searchBar">
+                    <input type="text" placeholder="Search here...." value="" id="inputData">
+                    <button id="searchBtn">Search</button>
+                </div>
+            </nav>
+            <div class="cardData">
+
+            </div>
+        </div>
+        
+        <script>document.addEventListener("DOMContentLoaded", function() {
+            let key="50c1ddb9a042481bb84b78798258fffd";
+            let cardData = document.querySelector(".cardData");
+            let SearchBtn = document.getElementById("searchBtn");
+            let inputData = document.getElementById("inputData");
+            let searchType = document.getElementById("type");
+            const getData = async(input) =>{
+                let res =await fetch(`https://newsapi.org/v2/everything?q=${input}&apiKey=${key}`);
+                let jsonData =await res.json();
+                console.log(jsonData.articles);
+                searchType.innerText="Search : "+input;
+        
+                cardData.innerHTML="";
+                jsonData.articles.forEach(function(article){
+                    console.log(article);
+                    let divs = document.createElement("div");
+                    divs.classList.add("card"); 
+                    cardData.appendChild(divs);
+                    divs.innerHTML=`
+                    <img src="${article.urlToImage}" alt="">
+                    <h3>${article.title}</h3>
+                    <p>${article.description}</p>
+            
+                    `
+                })
+                }
+                window.addEventListener("load", function(){
+                    getData("India");
+                })
+             SearchBtn.addEventListener("click", function(){
+                let inputText = inputData.value;
+                getData(inputText);
+             })  
+             function navClick(navName){
+                
+                getData(navName);
+             } 
+            
+        });
+        </script>
+    </body>
+</html>
